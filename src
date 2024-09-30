@@ -1,0 +1,60 @@
+# Sistema de Banco de Dados para Imobiliária
+
+Este é um sistema de banco de dados para gerenciamento de propriedades, clientes, agentes e vendas em uma imobiliária.
+
+## Tabelas
+
+- **propriedades**: Armazena informações sobre as propriedades disponíveis, vendidas ou alugadas.
+- **clientes**: Armazena informações sobre os clientes da imobiliária.
+- **agentes**: Armazena informações sobre os agentes imobiliários e suas comissões.
+- **vendas**: Armazena os registros de vendas realizadas.
+
+## Estrutura do Banco de Dados
+
+```sql
+-- Criar o banco de dados
+CREATE DATABASE imobiliaria;
+
+-- Usar o banco de dados
+USE imobiliaria;
+
+-- Criar tabela de propriedades
+CREATE TABLE propriedades (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    endereco VARCHAR(255) NOT NULL,
+    tipo ENUM('Apartamento', 'Casa', 'Terreno', 'Comercial') NOT NULL,
+    area DECIMAL(10, 2) NOT NULL,
+    preco DECIMAL(10, 2) NOT NULL,
+    status ENUM('Disponível', 'Vendido', 'Alugado') DEFAULT 'Disponível',
+    descricao TEXT
+);
+
+-- Criar tabela de clientes
+CREATE TABLE clientes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    telefone VARCHAR(15),
+    email VARCHAR(100)
+);
+
+-- Criar tabela de agentes
+CREATE TABLE agentes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    telefone VARCHAR(15),
+    email VARCHAR(100),
+    comissao DECIMAL(5, 2) DEFAULT 0.00
+);
+
+-- Criar tabela de vendas
+CREATE TABLE vendas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    propriedade_id INT,
+    cliente_id INT,
+    agente_id INT,
+    data_venda DATETIME DEFAULT CURRENT_TIMESTAMP,
+    valor DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (propriedade_id) REFERENCES propriedades(id),
+    FOREIGN KEY (cliente_id) REFERENCES clientes(id),
+    FOREIGN KEY (agente_id) REFERENCES agentes(id)
+);
